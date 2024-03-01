@@ -16,22 +16,22 @@ class get_journal:
     URL_PARAM_FORMAT = "xls"
     URL_PARAM_MODE = "homework-mode=previous"
 
-    def get_xls(self):
-        """
-        Метод для получения xls файла
-        Файл небольшой, храним в памяти
-        """
+    def __init__(self):
+        self.session = requests.Session()
+
+    def auth(self):
         auth_data = {'login': USER,
                      'password': PASSWD,
                      "submit": "submit",
                      "returnTo": "https://one.43edu.ru"
                      }
-        session = requests.Session()
-        auth__req = session.post(self.URL_AUTH, data=auth_data)
-        url_xls_base = f'https://one.43edu.ru/edv/index/report/diary/{self.URL_TOKEN}'
-        url_xls_data = {'format': 'xls',
-                        'date': today,
-                        'homework-mode': 'previous'}
-        get_xls_req = session.get(url_xls_base, data=url_xls_data)
+        auth__req = self.session.post(self.URL_AUTH, data=auth_data)
 
-        return get_xls_req
+    def get_xls(self):
+            url_xls_base = f'https://one.43edu.ru/edv/index/report/diary/{self.URL_TOKEN}'
+            url_xls_data = {'format': 'xls',
+                            'date': today,
+                            'homework-mode': 'previous'}
+            get_xls_req = self.session.get(url_xls_base, data=url_xls_data)
+
+            return get_xls_req
