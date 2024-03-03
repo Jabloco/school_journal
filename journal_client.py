@@ -1,18 +1,19 @@
+from datetime import datetime
+
 import requests
 
 from settings import TOKEN
 from settings import USER
 from settings import PASSWD
-from datetime import datetime
+
 
 dt_now = datetime.now()
 today = dt_now.strftime('%d.%m.%Y')
 
 
-class get_journal:
+class GetJournal:
     URL_REFERER = "https://one.43edu.ru/auth/login"
     URL_AUTH = "https://passport.43edu.ru/auth/login"
-    URL_TOKEN = TOKEN
     URL_PARAM_FORMAT = "xls"
     URL_PARAM_MODE = "homework-mode=previous"
 
@@ -28,10 +29,13 @@ class get_journal:
         auth__req = self.session.post(self.URL_AUTH, data=auth_data)
 
     def get_xls(self):
-            url_xls_base = f'https://one.43edu.ru/edv/index/report/diary/{self.URL_TOKEN}'
-            url_xls_data = {'format': 'xls',
-                            'date': today,
-                            'homework-mode': 'previous'}
-            get_xls_req = self.session.get(url_xls_base, data=url_xls_data)
+        url_xls_base = f'https://one.43edu.ru/edv/index/report/diary/{TOKEN}'
+        url_xls_data = {'format': 'xls',
+                        'date': today,
+                        'homework-mode': 'previous'}
+        xls_file = self.session.get(url_xls_base, data=url_xls_data)
+        return xls_file
 
-            return get_xls_req
+    def save_in_file(self, xls_file):
+        with open('./journal.xls', 'wb') as f:
+            f.write(xls_file)
